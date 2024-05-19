@@ -1,0 +1,176 @@
+---
+import LayoutGuest from "../../layouts/LayoutGuest.astro";
+---
+
+<LayoutGuest title="ChileGuajillo - Crear Película">
+    <main class="flex flex-col items-center xs:mt-20 sm:mt-24 w-full gap-2">
+        <div class="items-center flex flex-col p-2 backdrop-blur-2xl shadow-md border-b-zinc-950/30 border-r-zinc-950/30 border-t-zinc-600/30 hover:shadow-indigo-500/10 transition-all delay-0 ease-linear border-l-zinc-600/30 cursor-pointer border rounded w-fit gap-2">
+            <h2 class="text-4xl mt-4 text-white font-medium">Chile<span class="text-indigo-600 font-bold">Guajillo</span></h2>
+            <span class="text-zinc-300 text-sm md:w-96 text-center">Ingresa los datos de la nueva película</span>
+            <form id="movieForm" class="flex flex-col gap-5 w-full mt-5 px-8">
+                <div class="flex flex-col gap-2">
+                    <label for="name" class="text-sm text-zinc-500">Nombre</label>
+                    <input type="text" name="name" id="name" placeholder="Nombre de la película" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="releaseDate" class="text-sm text-zinc-500">Fecha de Lanzamiento</label>
+                    <input type="date" name="releaseDate" id="releaseDate" placeholder="Fecha de lanzamiento" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="synopsis" class="text-sm text-zinc-500">Sinopsis</label>
+                    <textarea name="synopsis" id="synopsis" placeholder="Sinopsis de la película" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded"></textarea>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="urlTrailer" class="text-sm text-zinc-500">URL del Tráiler</label>
+                    <input type="url" name="urlTrailer" id="urlTrailer" placeholder="URL del tráiler" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="image" class="text-sm text-zinc-500">URL de la Imagen</label>
+                    <input type="url" name="image" id="image" placeholder="URL de la imagen" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="director_id" class="text-sm text-zinc-500">Director</label>
+                    <select name="director_id" id="director_id" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border bg-zinc-950/20 p-2 px-5 outline-none rounded bg-zinc-800 text-zinc-300">
+                        <!-- Opciones de director se cargarán dinámicamente aquí -->
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="clasification_id" class="text-sm text-zinc-500">Clasificación</label>
+                    <select name="clasification_id" id="clasification_id" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border bg-zinc-950/20 p-2 px-5 outline-none rounded bg-zinc-800 text-zinc-300">
+                        <!-- Opciones de clasificación se cargarán dinámicamente aquí -->
+                    </select>
+                </div>
+                <div class="mt-4">
+                    <button id="btnSubmit" class="p-2 bg-indigo-600 hover:dark:text-black hover:dark:bg-white text-white font-medium w-full transition-all ease-linear delay-0 hover:bg-zinc-800">Crear Película</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</LayoutGuest>
+
+<script>
+    const btnSubmit = document.getElementById('btnSubmit');
+    const movieForm = document.getElementById('movieForm');
+
+    // Función para cargar los directores disponibles en el select
+    async function loadDirectors() {
+        try {
+            console.log('Fetching directors...');
+            const response = await fetch('http://127.0.0.1:8000/api/director');
+            console.log('Response received:', response);
+            if (!response.ok) {
+                throw new Error('Error al obtener la lista de directores: ' + response.statusText);
+            }
+            const directors = await response.json();
+            console.log('Directors fetched successfully:', directors); // Log para verificar datos
+            const directorSelect = document.getElementById('director_id');
+            directors.forEach(director => {
+                console.log('Adding director to select:', director);
+                const option = document.createElement('option');
+                option.value = director.id; // Suponiendo que cada director tenga un ID único en tu base de datos
+                option.textContent = director.name; // Suponiendo que el nombre del director es un campo en tu base de datos
+                option.classList.add('bg-zinc-800', 'text-zinc-300'); // Añadir clases de Tailwind para estilo
+                directorSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un error al obtener la lista de directores. Por favor, inténtalo de nuevo más tarde.');
+        }
+    }
+
+    // Función para cargar las clasificaciones disponibles en el select
+    async function loadClasifications() {
+        try {
+            console.log('Fetching classifications...');
+            const response = await fetch('http://127.0.0.1:8000/api/clasification');
+            console.log('Response received:', response);
+            if (!response.ok) {
+                throw new Error('Error al obtener la lista de clasificaciones: ' + response.statusText);
+            }
+            const clasifications = await response.json();
+            console.log('Clasifications fetched successfully:', clasifications); // Log para verificar datos
+            const clasificationSelect = document.getElementById('clasification_id');
+            clasifications.forEach(clasification => {
+                console.log('Adding clasification to select:', clasification);
+                const option = document.createElement('option');
+                option.value = clasification.id; // Suponiendo que cada clasificación tenga un ID único en tu base de datos
+                option.textContent = clasification.name; // Suponiendo que el nombre de la clasificación es un campo en tu base de datos
+                option.classList.add('bg-zinc-800', 'text-zinc-300'); // Añadir clases de Tailwind para estilo
+                clasificationSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un error al obtener la lista de clasificaciones. Por favor, inténtalo de nuevo más tarde.');
+        }
+    }
+
+    // Función para convertir la fecha a formato "Año-Mes-Día"
+    function formatDateToISO(dateStr) {
+        const [year, month, day] = dateStr.split("-");
+        return `${year}-${month}-${day}`;
+    }
+
+    // Llamar a las funciones para cargar los directores y clasificaciones cuando se cargue la página
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDirectors();
+        loadClasifications();
+    });
+
+    btnSubmit.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        const releaseDate = document.getElementById('releaseDate').value; // Obtener la fecha directamente en formato YYYY-MM-DD
+        const synopsis = document.getElementById('synopsis').value;
+        const urlTrailer = document.getElementById('urlTrailer').value;
+        const image = document.getElementById('image').value;
+        const directorId = document.getElementById('director_id').value;
+        const clasificationId = document.getElementById('clasification_id').value;
+
+        const movieData = {
+            name: name,
+            releaseDate: releaseDate,
+            synopsis: synopsis,
+            urlTrailer: urlTrailer,
+            image: image,
+            director_id: directorId,
+            clasification_id: clasificationId,
+            user_id: 1 // Suponiendo que tienes el ID de usuario de alguna manera (esto debe ajustarse según tu lógica)
+        };
+
+        console.log('Movie data being sent:', movieData); // Log para verificar los datos
+
+        if (name.trim() === "" || releaseDate.trim() === "" || synopsis.trim() === "" || urlTrailer.trim() === "" || image.trim() === "" || directorId.trim() === "" || clasificationId.trim() === "") {
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        btnSubmit.innerHTML = "Creando Película...";
+        try {
+            const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+            const response = await fetch('http://127.0.0.1:8000/api/movie', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(movieData)
+            });
+
+            const responseData = await response.json();
+            console.log('Response data:', responseData); // Log para verificar la respuesta
+
+            if (response.ok) {
+                btnSubmit.innerHTML = "Crear Película";
+                alert("Película creada exitosamente.");
+                // movieForm.reset();
+            } else {
+                btnSubmit.innerHTML = "Crear Película";
+                alert(`Hubo un error al crear la película: ${responseData.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            btnSubmit.innerHTML = "Crear Película";
+            alert("Hubo un error al realizar la solicitud al servidor. Por favor, inténtalo de nuevo más tarde.");
+        }
+    });
+</script>

@@ -1,0 +1,73 @@
+---
+import LayoutGuest from "../../layouts/LayoutGuest.astro";
+
+
+---
+<LayoutGuest title="ChileGuajillo - Inicio de sesión">
+    <main class="flex flex-col items-center xs:mt-20 sm:mt-24 w-full gap-2">
+        <div class="items-center flex flex-col p-2 backdrop-blur-2xl shadow-md border-b-zinc-950/30 border-r-zinc-950/30 border-t-zinc-600/30 hover:shadow-indigo-500/10 transition-all delay-0 ease-linear border-l-zinc-600/30 cursor-pointer border rounded w-fit gap-2">
+            <h2 class="text-4xl mt-4 text-white font-medium">Chile<span class="text-indigo-600  font-bold">Guajillo</span></h2>
+            <span class="text-zinc-300 text-sm md:w-96 text-center">Inicia sesión para acceder a las reseñas y criticas de miles de peliculas en todo el mundo</span>
+            <form action="post" class="flex flex-col gap-5 w-full mt-5 px-8">
+                <div class="flex flex-col gap-2">
+                    <label for="email" class="text-sm text-zinc-500">Email</label>
+                    <input type="email" name="email" id="email" placeholder="example@itslLerdo.com" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded ">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="password" class="text-sm text-zinc-500">Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="******" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded ">
+                </div>
+                <div class="mt-4">
+                    <button id="btnSubmit" class="p-2 bg-indigo-600  hover:dark:text-black hover:dark:bg-white text-white font-medium w-full transition-all ease-linear delay-0 hover:bg-zinc-800">Iniciar Sesión</button>
+                    <div class="mt-4 w-full flex md:flex-row xs:flex-col xs:items-center gap-4 justify-center">
+
+                        <a href="/auth/Register" class="text-zinc-300 underline text-sm hover:text--white">Aun no tengo cuenta</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+</LayoutGuest>
+<script >
+    const btnSubmit = document.getElementById('btnSubmit');
+    const mdAlerta = document.getElementById("mdAlerta");
+    
+    btnSubmit.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if(email  != "" && password != ""){
+            btnSubmit.innerHTML = "Cargando..";
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/login',{
+                    method:'POST',
+                    headers:{
+                        "Content-Type": "application/json"
+                    },
+                    body:JSON.stringify({
+                        email:email,
+                        password:password
+                    })
+                });
+                
+                if(response.ok){
+                    const responseData = await response.json();
+                    localStorage.setItem('tokerUser_Verified',JSON.stringify(responseData.token));
+                    localStorage.setItem('userSession_Verified',JSON.stringify(responseData.user));
+                    return window.location.href = "/";
+                }
+                else{
+                    btnSubmit.innerHTML = "Iniciar Sesión";
+                    alert("Hubo un error con tus credenciales");
+                }
+            } catch (error) {
+                btnSubmit.innerHTML = "Iniciar Sesión";
+                alert('Estamos experimentando problemas con el servidor, por favor vuelve a intentarlo mas tarde (' + error + ')');
+            }
+        }
+        else{
+            alert("Todos los espacios deben de ser llenados.")
+        }
+    })
+</script>

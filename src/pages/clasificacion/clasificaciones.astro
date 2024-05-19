@@ -1,0 +1,88 @@
+---
+import LayoutGuest from "../../layouts/LayoutGuest.astro";
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content="{Astro.generator}" />
+    <title>Crear Clasificación</title>
+</head>
+<body class="h-screen w-screen relative overflow-x-hidden dark:bg-[#131313] bg-slate-50">
+    <div class="relative h-full w-full bg-slate-950">
+        <div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]">
+            <header class="items-center absolute w-full flex p-3 xs:px-5 md:px-20 lg:px-10 justify-between">
+                <a href="/" class="text-2xl text-white font-medium">Chile<span class="text-red-600 font-bold">Guajillo</span></a>
+                <nav class="flex gap-3">
+                    <a href="/" class="font-medium text-zinc-300 hover:text-white py-2">Dashboard</a>
+                </nav>
+            </header>
+            <div class="flex h-full w-full items-center justify-center">
+                <div class="max-w-lg w-full p-10 space-y-4 rounded-xl bg-white shadow-lg backdrop-blur-lg">
+                    <h2 class="text-center text-3xl font-bold text-gray-700">Crear Clasificación</h2>
+                    <p class="text-sm text-gray-500 text-center">Ingresa la nueva clasificación</p>
+                    <form id="classificationForm" class="space-y-6">
+                        <div class="flex flex-col">
+                            <label for="name" class="text-sm font-medium text-gray-600">Nombre</label>
+                            <input type="text" name="name" id="name" placeholder="Nombre de la clasificación" class="p-3 border rounded-md focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <button type="submit" id="btnSubmit" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition duration-200 ease-in-out">Crear clasificación</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    const btnSubmit = document.getElementById('btnSubmit');
+    const classificationForm = document.getElementById('classificationForm');
+
+    classificationForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+
+        if (name.trim() === "") {
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        btnSubmit.innerHTML = "Creando Clasificación...";
+        try {
+            const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+            console.log("Token:", token); // Registro del token
+            const response = await fetch('http://127.0.0.1:8000/api/clasification', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: name
+                })
+            });
+
+            console.log("Response:", response); // Registro de la respuesta
+
+            if (response.ok) {
+                btnSubmit.innerHTML = "Crear Clasificación";
+                alert("Clasificación creada exitosamente.");
+                // classificationForm.reset();
+            } else {
+                const errorData = await response.json();
+                console.error("Error Data:", errorData); // Registro de los datos de error
+                btnSubmit.innerHTML = "Crear Clasificación";
+                alert(`Hubo un error al crear la clasificación: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error); // Registro del error
+            btnSubmit.innerHTML = "Crear Clasificación";
+            alert("Hubo un error al realizar la solicitud al servidor. Por favor, inténtalo de nuevo más tarde.");
+        }
+    });
+</script>

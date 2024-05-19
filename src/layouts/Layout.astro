@@ -1,0 +1,99 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="h-screen w-screen relative overflow-x-hidden bg-slate-50 dark:bg-[#131313]">
+		<div class="relative h-full w-full bg-slate-950">
+			<div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]">
+				<header class="items-center gap-10 absolute w-full flex xs:py-3 sm:p-0 xs:px-5 md:px-10  justify-between ">
+					<a href="/" class="text-2xl text-white font-medium">Chile<span class="text-red-600  font-bold">Guajillo</span></a>
+					<nav class=" gap-3">
+						<div id="navGuest">
+							<a href="/auth/Login" class="text-zinc-300 p-2 font-medium hover:text-white">Iniciar sesion</a>
+							<span class="text-zinc-400">/</span>
+							<a href="/auth/Register" class="font-medium p-2 text-zinc-300 hover:text-white">Registrarse</a>
+						</div>
+						<div id="navAuth">
+							<div class="flex gap-2">
+								<a href="#" class="hover:text-indigo-200 font-medium transition-all delay-0  hover:bg-indigo-950/20 p-2 rounded">Perfil</a>
+								<a href="#" class="text-nowrap"></a>
+							</div>
+							<span>/</span>
+							<div class="flex items-center gap-2 hover:bg-indigo-950/20 rounded-full pr-3 transition-all delay-0 ease-linear">
+								<img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg"
+								class="w-12 h-12 rounded-full" alt="Imagen de perfil">
+								<a class="text-nowrap" id="cardUserName"></a>
+							</div>
+						</div>
+					</nav>
+					<button class="xs:flex md:hidden">
+						<svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="7" x2="19" y2="7" stroke="rgba(250,250,255)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line><line x1="5" y1="12" x2="19" y2="12" stroke="rgba(250,250,255" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line><line x1="5" y1="17" x2="19" y2="17" stroke="rgba(250,250,255)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></line></svg>
+					</button>
+				</header>
+				<div class="flex h-full w-full xs:pt-20 md:pt-24 gap-4">
+					<aside class="flex flex-col h-full justify-between pb-2">
+						<div class="flex md:flex-col justify-between h-screen text-zinc-300">
+							<div class="flex flex-col gap-2">
+								<span class="pl-8 text-sm text-zinc-500 pr-16">Menu de navegacion</span>
+								<div class="flex flex-col gap-2 font-medium">
+									<a href="/" class="pl-8 py-1 border-l-4 text-red-500 border-l-red-500 pr-16 bg-red-950/20">Inicio</a>
+									<a href="/peliculas" class="pl-8 py-1 pr-16 ">Peliculas</a>
+									
+									<a href="/directores/CreateDirector" class="font-medium p-2 text-zinc-300 hover:text-white">Director</a>
+									<a href="/clasificacion/clasificaciones" class="font-medium p-2 text-zinc-300 hover:text-white">Clasificacion</a>
+									<a href="/peliculas/CreateMovie" class="font-medium p-2 text-zinc-300 hover:text-white">Crear Peli</a>
+									<!-- <a href="/perfil/perfil" class="font-medium p-2 text-zinc-300 hover:text-white">Perfil</a> -->
+
+
+								</div>
+							</div>
+							<div class="px-8">
+								<button id="btnLogOut">Cerrar Sesión</button>
+							</div>
+						</div>
+					</aside>
+					<slot />
+				</div>
+			</div>
+		</div>
+		<script src="./../utils/Auth.js"></script>
+	</body>
+</html>
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+</style>

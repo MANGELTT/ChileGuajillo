@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content="Astro.generator" />
+    <title>Editar Perfil</title>
+</head>
+<body class="h-screen w-screen relative overflow-x-hidden dark:bg-[#131313] bg-slate-50">
+    <div class="relative h-full w-full bg-slate-950">
+        <div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]">
+            <header class="items-center absolute w-full flex p-3 xs:px-5 md:px-20 lg:px-10 justify-between">
+                <a href="/" class="text-2xl text-white font-medium">Chile<span class="text-red-600 font-bold">Guajillo</span></a>
+                <nav class="flex gap-3">
+                    <a href="/" class="font-medium text-zinc-300 hover:text-white py-2">Dashboard</a>
+                </nav>
+            </header>
+            <div class="flex h-full w-full items-center justify-center">
+                <div class="max-w-lg w-full p-10 space-y-4 rounded-xl bg-white shadow-lg backdrop-blur-lg">
+                    <h2 class="text-center text-3xl font-bold text-gray-700">Editar Perfil</h2>
+                    <form id="profileForm" class="space-y-6">
+                        <div class="flex flex-col">
+                            <label for="photo" class="text-sm font-medium text-gray-600">Foto</label>
+                            <input type="text" name="photo" id="photo" placeholder="URL de la foto" class="p-3 border rounded-md focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="sex" class="text-sm font-medium text-gray-600">Sexo</label>
+                            <input type="text" name="sex" id="sex" placeholder="Sexo" class="p-3 border rounded-md focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="birthdate" class="text-sm font-medium text-gray-600">Fecha de nacimiento</label>
+                            <input type="date" name="birthdate" id="birthdate" class="p-3 border rounded-md focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <button type="submit" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition duration-200 ease-in-out">Actualizar Perfil</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    const btnSubmit = document.getElementById('btnSubmit');
+    const profileForm = document.getElementById('profileForm');
+
+    btnSubmit.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const photo = document.getElementById('photo').value;
+        const sex = document.getElementById('sex').value;
+        const birthdate = document.getElementById('birthdate').value;
+
+        if (photo.trim() === "" || sex.trim() === "" || birthdate.trim() === "") {
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        btnSubmit.innerHTML = "Actualizando Perfil...";
+        try {
+            const token = JSON.parse(localStorage.getItem('tokenUser_Verified'));
+            const response = await fetch('http://127.0.0.1:8000/api/profile', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    photo: photo,
+                    sex: sex,
+                    birthdate: birthdate
+                })
+            });
+
+            if (response.ok) {
+                btnSubmit.innerHTML = "Actualizar Perfil";
+                alert("Perfil actualizado exitosamente.");
+                // profileForm.reset();
+            } else {
+                const errorData = await response.json();
+                btnSubmit.innerHTML = "Actualizar Perfil";
+                alert(`Hubo un error al actualizar el perfil: ${errorData.message}`);
+            }
+        } catch (error) {
+            btnSubmit.innerHTML = "Actualizar Perfil";
+            alert("Hubo un error al realizar la solicitud al servidor. Por favor, inténtalo de nuevo más tarde.");
+        }
+    });
+</script>

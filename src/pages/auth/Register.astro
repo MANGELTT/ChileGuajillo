@@ -1,0 +1,78 @@
+---
+import LayoutGuest from "../../layouts/LayoutGuest.astro";
+---
+<LayoutGuest title="ChileGuajillo - Registro">
+    <main class="flex flex-col items-center xs:mt-20 sm:mt-14 w-full gap-2">
+        <div class="items-center flex flex-col p-2 backdrop-blur-2xl shadow-md border-b-zinc-950/30 border-r-zinc-950/30 border-t-zinc-600/30 hover:shadow-indigo-500/10 transition-all delay-0 ease-linear border-l-zinc-600/30 cursor-pointer border rounded w-fit gap-2">
+            <h2 class="text-4xl mt-4  font-medium text-white">Chile<span class="text-indigo-600 font-bold">Guajillo</span></h2>
+            <span class="text-zinc-300 text-sm md:w-96 text-center">Registrate para acceder a las reseñas y criticas de miles de peliculas en todo el mundo</span>
+            <form method="post" class="flex flex-col gap-5 w-full mt-5 px-8">
+                <div class="flex flex-col gap-2">
+                    <label for="name" class="text-sm text-zinc-500">Nombre</label>
+                    <input type="text" name="name" id="name" placeholder="example" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded ">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="email" class="text-sm text-zinc-500">Email</label>
+                    <input type="email" name="email" id="email" placeholder="example@itslLerdo.com" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded ">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="password" class="text-sm text-zinc-500 ">Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="******" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded ">
+                </div>
+                <div class="mt-4">
+                    <button id="btnSubmit" class="p-2 bg-indigo-600  hover:dark:text-black hover:dark:bg-white text-white font-medium w-full transition-all ease-linear delay-0 hover:bg-zinc-800">Crear cuenta</button>
+                    <div class="mt-4 w-full flex justify-center">
+                        <a href="/auth/Login" class="text-zinc-300 hover:text-white underline text-sm">Ya tengo cuenta</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+</LayoutGuest>
+<script >
+const btnSubmit = document.getElementById('btnSubmit');
+
+btnSubmit.addEventListener('click', async (event) => {
+
+        event.preventDefault(); 
+        const txtName = document.getElementById('name').value;
+        const txtEmail = document.getElementById('email').value;
+        const txtPassword = document.getElementById('password').value;
+
+        // Validar campos de entrada
+        if (!txtName || !txtEmail || !txtPassword) {
+            alert("Por favor, complete todos los campos.");
+            return;
+        }
+        btnSubmit.innerHTML = "Cargando..";
+        try {
+            const response = await fetch('http://localhost:8000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "name": txtName,
+                    "email": txtEmail,
+                    "password": txtPassword
+                })
+            });
+
+            if (!response.ok) {
+                btnSubmit.innerHTML = "Crear cuenta";
+                return alert('Error al registrar, verifica la informacion ingresada y vuelve a intentarlo');
+            }
+
+            const responseData = await response.json();
+            window.location.href = "http://localhost:4321/auth/Login";
+        } catch (error) {
+            btnSubmit.innerHTML = "Crear cuenta";
+            alert("Ha ocurrido un error. Por favor, inténtelo más tarde. ("+ error + ")");
+            return
+        }
+});
+</script>
+
+
+
+
+
+

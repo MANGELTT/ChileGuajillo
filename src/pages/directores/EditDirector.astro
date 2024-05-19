@@ -1,0 +1,156 @@
+---
+import LayoutGuest from "../../layouts/LayoutGuest.astro";
+---
+
+<LayoutGuest title="ChileGuajillo - Editar Director">
+    <main class="flex flex-col items-center xs:mt-20 sm:mt-24 w-full gap-2">
+        <div class="items-center flex flex-col p-2 backdrop-blur-2xl shadow-md border-b-zinc-950/30 border-r-zinc-950/30 border-t-zinc-600/30 hover:shadow-indigo-500/10 transition-all delay-0 ease-linear border-l-zinc-600/30 cursor-pointer border rounded w-fit gap-2">
+            <h2 class="text-4xl mt-4 text-white font-medium">Chile<span class="text-indigo-600 font-bold">Guajillo</span></h2>
+            <span class="text-zinc-300 text-sm md:w-96 text-center">Edita los datos del director</span>
+            <form id="directorForm" class="flex flex-col gap-5 w-full mt-5 px-8">
+                <div class="flex flex-col gap-2">
+                    <label for="director_id" class="text-sm text-zinc-500">Seleccionar Director</label>
+                    <select name="director_id" id="director_id" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded bg-zinc-800 text-zinc-300">
+                        <!-- Opciones de director se cargarán dinámicamente aquí -->
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="name" class="text-sm text-zinc-500">Nombre</label>
+                    <input type="text" name="name" id="name" placeholder="Nombre del director" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="sex" class="text-sm text-zinc-500">Sexo</label>
+                    <input type="text" name="sex" id="sex" placeholder="Sexo del director" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="age" class="text-sm text-zinc-500">Edad</label>
+                    <input type="number" name="age" id="age" placeholder="Edad del director" class="border-b-zinc-600/30 border-t-zinc-950/30 border-l-zinc-950/30 border-r-zinc-600/30 border text-zinc-300 bg-zinc-950/20 p-2 px-5 outline-none rounded">
+                </div>
+                <div class="mt-4">
+                    <button id="btnSubmit" class="p-2 bg-indigo-600 hover:dark:text-black hover:dark:bg-white text-white font-medium w-full transition-all ease-linear delay-0 hover:bg-zinc-800">Actualizar Director</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</LayoutGuest>
+
+<script>
+    const btnSubmit = document.getElementById('btnSubmit');
+    const directorForm = document.getElementById('directorForm');
+    const directorSelect = document.getElementById('director_id');
+
+    // Función para cargar los directores disponibles en el select
+    async function loadDirectors() {
+        try {
+            const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+            const response = await fetch('http://127.0.0.1:8000/api/director', {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al obtener la lista de directores');
+            }
+
+            const directors = await response.json();
+            directors.forEach(director => {
+                const option = document.createElement('option');
+                option.value = director.id;
+                option.textContent = director.name;
+                option.classList.add('bg-zinc-800', 'text-zinc-300');
+                directorSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un error al obtener la lista de directores. Por favor, inténtalo de nuevo más tarde.');
+        }
+    }
+
+    // Función para prellenar el formulario con los datos del director
+    async function fetchDirectorData(directorId) {
+        try {
+            const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+            const response = await fetch(`http://127.0.0.1:8000/api/director/${directorId}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const director = await response.json();
+                document.getElementById('name').value = director.name;
+                document.getElementById('sex').value = director.sex;
+                document.getElementById('age').value = director.age;
+                console.log(`Director data fetched and populated for director ID: ${directorId}`);
+            } else {
+                const errorData = await response.json();
+                console.error(`Error al obtener los datos del director: ${errorData.message}`);
+                alert(`Error al obtener los datos del director: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error("Error de solicitud:", error);
+            alert("Hubo un error al realizar la solicitud al servidor. Por favor, inténtalo de nuevo más tarde.");
+        }
+    }
+
+    // Evento para cargar los datos del director seleccionado en el formulario
+    directorSelect.addEventListener('change', (event) => {
+        const selectedDirectorId = event.target.value;
+        if (selectedDirectorId) {
+            fetchDirectorData(selectedDirectorId);
+        }
+    });
+
+    // Llamar a la función para cargar los directores cuando se cargue la página
+    document.addEventListener('DOMContentLoaded', loadDirectors);
+
+    btnSubmit.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const selectedDirectorId = directorSelect.value;
+        const name = document.getElementById('name').value;
+        const sex = document.getElementById('sex').value;
+        const age = document.getElementById('age').value;
+
+        if (name.trim() === "" || sex.trim() === "" || age.trim() === "") {
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        btnSubmit.innerHTML = "Actualizando Director...";
+        try {
+            const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+            const response = await fetch(`http://127.0.0.1:8000/api/director/${selectedDirectorId}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: name,
+                    sex: sex,
+                    age: parseInt(age)
+                })
+            });
+
+            if (response.ok) {
+                btnSubmit.innerHTML = "Actualizar Director";
+                alert("Director actualizado exitosamente.");
+                // directorForm.reset();
+            } else {
+                const errorData = await response.json();
+                console.error(`Hubo un error al actualizar el director: ${errorData.message}`);
+                btnSubmit.innerHTML = "Actualizar Director";
+                alert(`Hubo un error al actualizar el director: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error("Error de solicitud:", error);
+            btnSubmit.innerHTML = "Actualizar Director";
+            alert("Hubo un error al realizar la solicitud al servidor. Por favor, inténtalo de nuevo más tarde.");
+        }
+    });
+</script>

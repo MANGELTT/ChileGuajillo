@@ -1,0 +1,59 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="h-screen w-screen relative overflow-x-hidden dark:bg-[#131313] bg-slate-50">
+		<div class="relative h-full w-full bg-slate-950">
+			<div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]">
+				<header class="items-center absolute w-full flex p-3 xs:px-5 md:px-20 lg:px-10  justify-between">
+					<a href="/" class="text-2xl text-white font-medium">Chile<span class="text-red-600 font-bold">Guajillo</span></a>
+					 <nav class="flex gap-3">
+						<a href="/" class=" font-medium text-zinc-300 hover:text-white py-2">Dashboard</a>
+					 </nav>
+				</header>
+				<div class="flex h-full w-full pt-24 gap-24 px-32">
+					<slot />
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+</style>

@@ -1,0 +1,36 @@
+---
+const {name, resourceImage, rating, Sipnosis, id} = Astro.props;
+---
+    <div onclick="handleOpen(id)" id={'cardPelicula'+id} class="flex flex-col p-2 backdrop-blur-2xl shadow-lg border-b-zinc-950/30 border-r-zinc-950/30 border-t-zinc-600/30 hover:shadow-indigo-500/10 transition-all delay-0 ease-linear border-l-zinc-600/30 cursor-pointer border rounded w-fit gap-2">
+        <div class="flex gap-2">
+            <div class="">
+                <img src={resourceImage} alt="" class="w-44">
+            </div>
+            <div class="flex flex-col">
+                <span class="text-white font-bold text-xl">{name}</span>
+                <span class="text-nowrap">{rating}</span>
+                <span class="text-zinc-300 w-44 text-sm">{Sipnosis}</span>
+            </div>
+        </div>
+        <div class="p-2 text-zinc-500 text-sm flex  w-full bg-white/10 rounded">
+            personas que la han visto
+        </div>
+        <dialog id={"modalPelicula"+id}>
+
+        </dialog>
+    </div>
+
+
+<script is:inline>
+    function handleOpen(id){
+        try{
+            const token = localStorage.getItem("tokerUserVerified");
+            // if(!token){
+            //     return alert("Necesitas una cuenta para poder calificar una pelicula, por favor registrate o inicia sesión")
+            // }
+            const idPelicula = id.split("")
+            return window.location.href = '/peliculas/'+idPelicula[1];
+
+        } catch (error){ alert("Ha ocurrido un error. Por favor, inténtelo más tarde. ("+ error + ")"); }
+        }
+    </script>
