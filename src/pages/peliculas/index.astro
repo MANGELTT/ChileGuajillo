@@ -1,46 +1,55 @@
 ---
+// Importar el layout
 import Layout from './../../layouts/Layout.astro'
-import CardPelicula from '../../components/CardPelicula.astro'
+
+const fetchMovies = async () => {
+    let peliculas;
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/movie');
+        if (!response.ok) {
+            console.log("Hubo un error con la petición");
+        } else {
+            peliculas = await response.json();
+        }
+    } catch (error) {
+        console.error('Error en la solicitud fetch:', error);
+    }
+    return peliculas;
+};
+
+const {data} = await fetchMovies();
+console.log(data)
 ---
-<Layout title='Todas nuestras'>
-    <main class="w-full flex flex-col gap-7 overflow-auto-y pl-7 pr-14 py-2" >
+
+<Layout title='Peliculas'>
+    <main class="w-full flex flex-col gap-7 overflow-auto-y pl-7 pr-14 py-2">
        <div class="w-full flex justify-between">
             <input type="text"
-            name="" id="" placeholder="Buscar peliculas" resourceImage="" Sipnosis="" class="bg-transparent outline-none border-b text-white px-2 border-b-zinc-400">
+            name="" id="" placeholder="Buscar peliculas" class="bg-transparent outline-none border-b text-white px-2 border-b-zinc-400">
             <select name="" id="" class="bg-[#020617] outline-none text-zinc-400 px-2">
                 <option value="">Todas las peliculas</option>
                 <option value="">Mas populares</option>
                 <option value="">Recientes</option>
             </select>
        </div>
-        <div class=" grid grid-cols-3 gap-14 overflow-y-scroll pb-10 px-4">
-            <a href="../peliculas/PeliDetalles">    
-            <CardPelicula id="1" name="IA"  
-                 rating="🌶️🌶️🌶️🌶️🌶️"  
-                 Sipnosis="Inteligencia Artificial sigue a David, un niño robot, en su búsqueda de amor y aceptación en un mundo tecnológicamente avanzado, explorando los límites entre lo humano y lo artificial. "
-                 resourceImage="https://th.bing.com/th/id/OIP.w8fMO2AfVkAC6B7H7D8FdwHaLN?pid=ImgDet&w=185&h=280&c=7"  />
-            </a>
-                <CardPelicula id="2" name="niña del aro"  
-                 rating="🌶️🌶️🌶️"  
-                 Sipnosis="La Niña del Aro sigue la historia de una cinta de vídeo maldita que condena a quienes la ven a morir en siete días, desatando una lucha por la supervivencia de una periodista y su hijo. "
-                 resourceImage="https://th.bing.com/th/id/OIP.g4hqKbF6z3kbGWm2-lfiZwAAAA?rs=1&pid=ImgDetMain"  />
-                <CardPelicula id="3" name="Julianta"  
-                rating="🌶️"  
-                Sipnosis="Taracendido es un thriller que sigue a Diego, un periodista, mientras investiga una serie de muertes en una pequeña ciudad, revelando una red de corrupción política y empresarial."
-                resourceImage="https://cinergetica.com.mx/wp-content/uploads/2014/02/transcendence-poster-1-480x709.jpg"  />
-                <CardPelicula id="4" name="The Batman"  
-                rating="🌶️🌶️🌶️🌶️🌶️"  
-                Sipnosis="The Batman, Bruce Wayne enfrenta un enigma criminal en sus inicios como vigilante en Gotham, enfrentándose al Riddler con la ayuda de Selina Kyle y James Gordon."
-                resourceImage="https://th.bing.com/th/id/OIP.Ixx7-LdFLFBQtGiPspXtlgAAAA?rs=1&pid=ImgDetMain"  />
-                <CardPelicula id="5" name="spider-man amazing "  
-                rating="🌶️🌶️🌶️🌶️🌶️"  
-                Sipnosis="Spider-Man: Amazing, Peter Parker lucha contra el crimen mientras equilibra su vida personal y su deber como héroe arácnido."
-                resourceImage="https://th.bing.com/th/id/R.78c77a6e1a38509b04b56f12ee68d313?rik=2%2fPdybPp9yqjUA&riu=http%3a%2f%2fcinepremiere.com.mx%2fimgsHistorico%2fu18%2fAmazingSpidermanPoster_0.jpg&ehk=5PzBVXKrzhLZBpMy3XWt3sE%2fOkym4s%2fiD%2bWTTb1k%2bSQ%3d&risl=&pid=ImgRaw&r=0"  />
-                <CardPelicula id="6" name="Joker"  
-                rating="🌶️🌶️🌶️🌶️🌶️"  
-                Sipnosis="Joker, Arthur Fleck, un comediante fracasado, se sumerge en la locura mientras se convierte en el icónico villano de Ciudad Gótica, desencadenando el caos y desafiando al orden establecido."
-                resourceImage="https://uh.gsstatic.es/sfAttachPlugin/945741.png"  />
-        </div>
+       
+       <div class="flex flex-wrap gap-4">
+           {data.length > 0 ? (
+                data.map((pelicula) => (
+                <a href={`peliculas/Details/${pelicula.id}`} class=" relative bg-zinc-800 text-white rounded-lg w-60">
+                    <div class="p-2 absolute bg-gradient-to-b from-black/60 w-full ">
+                        <h3 class=" text-lg font-medium">{pelicula.name}</h3>
+                        <p class="text-sm text-zinc-500">{pelicula.releaseDate}</p>
+                    </div>
+                    <div> 
+                        <img src={pelicula.image} alt="Imagen de la pelicula" class="w-30" />
+                    </div>
+                </a>
+                ))
+           ) : (
+                <p class="text-white">No se encontraron películas</p>
+           )}
+       </div>
     </main>
-    
 </Layout>
+

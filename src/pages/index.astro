@@ -3,24 +3,125 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="ChileGuajillo - Sitio Web Oficial">
-	<main class="w-full flex flex-col gap-7 overflow-auto-y" >
-		<section id="Principal" class="w-11/12 flex flex-col gap-2  p-2 rounded">
-			<span class="font-medium text-zinc-300">Novedades</span>
-			<div class="rounded max-w-4xl h-80 bg-[url(https://cdn.colombia.com/sdi/2024/02/16/godzilla-x-kong-the-new-empire-se-conocen-nuevos-detalles-de-la-trama-de-la-esperada-cinta-del-monsterverse-1224747.jpg)] bg-cover
-			flex flex-col justify-end ">
+	<main class="w-full flex flex-col gap-7 overflow-auto-y">
+		<section id="Principal" class="w-11/12 flex flex-col gap-2 p-2 rounded">
+		  <span class="font-medium text-zinc-300">Novedades</span>
+		  <div class="slider-container relative">
+			<div class="slider slide-track">
+			  <div class="Carrusel relative" id="Carrusel">
+				<button id="Anterior" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded">Anterior</button>
+				<img id="carrusel" class="w-full" src="https://i.blogs.es/403357/los-caballeros-del-zodiaco-portada-f/1366_2000.jpeg" alt="Imagenes" />
+				<button id="Siguiente" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded">Siguiente</button>
 				<div class="bg-gradient-to-t from-indigo-950 p-10 flex flex-col gap-3">
-					<h1 class="text-white text-4xl font-bold">Godzilla x Kong: El nuevo imperio</h1>
-					<span class="text-white">El gorila y el kaiju, juntos de nuevo en una batalla contra los peligros subterráneos de nuestro planeta.</span>
-					<div class="flex gap-2">
-						<button class="bg-zinc-200 font-medium p-2 flex gap-2 items-center">
-							<span class="">Ver trailer</span>
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
-						</button>
-						<!-- <a href="#" class="border-2 text-white font-medium p-2">Calificar pelicula</a> -->
-					</div>
+				  <h1 id="movie-title" class="text-white text-4xl font-bold">Los Caballeros del Zodiaco</h1>
+				  <div class="flex gap-2">
+					<a id="trailer-link" href="https://youtu.be/Kqg8zLgESyQ?si=UJUONN8u8gI08-Rz" class="bg-zinc-200 font-medium p-2 flex gap-2 items-center" target="_blank" rel="noopener noreferrer">
+					  <span>Ver trailer</span>
+					  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10"></circle>
+						<polygon points="10 8 16 12 10 16 10 8"></polygon>
+					  </svg>
+					</a>
+					<a href="#" class="border-2 text-white font-medium p-2">Calificar película</a>
+				  </div>
 				</div>
+			  </div>
 			</div>
+		  </div>
 		</section>
-		
-	</main>
+	  </main>
+	 <!-- El Modal -->
+	 <div id="myModal" class="modal">
+		<div class="modal-content">
+		  <span class="close">&times;</span>
+		  <iframe id="trailer-frame" src="" frameborder="0" allowfullscreen></iframe>
+		</div>
+	  </div>
+	
+	<style>
+		img{
+    width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
+    height: 25vw; /* Establece la altura de la imagen en función del ancho de la pantalla */
+    object-fit: cover; /* Ajusta cómo se escalará la imagen para cubrir el contenedor */
+    border-radius: 10px;
+  }
+  .Carrusel{
+    width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
+    height: 40vw; /* Establece la altura de la imagen en función del ancho de la pantalla */
+    object-fit: cover; /* Ajusta cómo se escalará la imagen para cubrir el contenedor */
+    border-radius: 10px;
+    transform: all 0.3s ease-in;
+  }
+  .slider-container {
+  position: relative;
+}
+.slider {
+  display: flex;
+  overflow: hidden;
+}
+.Carrusel button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.Carrusel button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+#Anterior {
+  left: 10px;
+}
+
+#Siguiente {
+  right: 10px;
+}
+
+/* Estilos para el modal */
+.modal {
+      display: none; /* Oculto por defecto */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4); /* Fondo negro con opacidad */
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px; /* Ancho máximo */
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    iframe {
+      width: 100%;
+      height: 400px;
+    }
+	</style>
 </Layout>
