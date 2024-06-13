@@ -37,7 +37,13 @@ console.log('Detalles de la película:', movieDetails);
             <div>
               <p class="text-lg text-gray-300 mb-4">{movieDetails.synopsis}</p>
               <p class="text-sm text-gray-500 mb-4">{new Date(movieDetails.releaseDate).toLocaleDateString()}</p>
-              <a href={movieDetails.urlTrailer} class="inline-block text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition duration-300">Ver Trailer</a>
+              <a id="trailer-link" href={movieDetails.urlTrailer} class="bg-zinc-200 font-medium p-2 flex gap-2 items-center" target="_blank" rel="noopener noreferrer">
+                <span>Ver trailer</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
@@ -53,8 +59,3 @@ console.log('Detalles de la película:', movieDetails);
       </div>
     </div>
 </Layout>
-
-  
-  
-  
-  
