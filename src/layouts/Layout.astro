@@ -53,9 +53,9 @@ const { title } = Astro.props;
 									<a href="/" class="pl-8 py-1 border-l-4 text-red-500 border-l-red-500 pr-16 bg-red-950/20">Inicio</a>
 									<a href="/peliculas" class="pl-8 py-1 pr-16 ">Peliculas</a>
 									
-									<a href="/directores/CreateDirector" class="font-medium p-2 text-zinc-300 hover:text-white">Director</a>
-									<a href="/clasificacion/clasificaciones" class="font-medium p-2 text-zinc-300 hover:text-white">Clasificacion</a>
-									<a href="/peliculas/CreateMovie" class="font-medium p-2 text-zinc-300 hover:text-white">Crear Peli</a>
+									<a href="/directores/CreateDirector" class="font-medium p-2 text-zinc-300 hover:text-white hidden">Crear Director</a>
+									<a href="/clasificacion/clasificaciones" class="font-medium p-2 text-zinc-300 hover:text-white hidden">Crear Clasificacion</a>
+									<a href="/peliculas/CreateMovie" class="font-medium p-2 text-zinc-300 hover:text-white hidden">Crear Pelicula</a>
 									<!-- <a href="/perfil/perfil" class="font-medium p-2 text-zinc-300 hover:text-white">Perfil</a> -->
 
 
@@ -97,4 +97,54 @@ const { title } = Astro.props;
 			Courier New,
 			monospace;
 	}
+	.hidde{
+		display: none;
+	}
 </style>
+
+<script>
+	async function loadUser() {
+    try {
+        const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+        console.log("Token:", token);
+        console.log('Fetching userID...');
+        const response = await fetch('http://127.0.0.1:8000/api/user-profile', {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error al obtener el UserID: ' + response.statusText);
+        }
+        
+        const userProfile = await response.json();
+        const userID = userProfile.userData.profile.user_id;
+        console.log('User ID:', userID);
+        localStorage.setItem('userID', userID); // Almacena el userID en localStorage
+        return userID;
+
+    } catch (error) {
+        console.error(error);
+        alert('Hubo un problema al obtener el UserID. Por favor, intenta de nuevo más tarde.');
+        return null; // Retorna null en caso de error
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await loadUser(); // Asegura que loadUser se ejecute al cargar la página
+        const userID = localStorage.getItem('userID');
+
+        if (userID !== '2') {
+            document.querySelector('a[href="/directores/CreateDirector"]').classList.remove('hidden');
+            document.querySelector('a[href="/clasificacion/clasificaciones"]').classList.remove('hidden');
+            document.querySelector('a[href="/peliculas/CreateMovie"]').classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error during initial load:', error);
+    }
+});
+</script>
