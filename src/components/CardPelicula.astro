@@ -1,5 +1,5 @@
 ---
-const {name, resourceImage, rating, Sipnosis, id} = Astro.props;
+const {name, resourceImage, rating, Sinopsis, id} = Astro.props;
 ---
     <div onclick="handleOpen(id)" id={'cardPelicula'+id} class="flex flex-col p-2 backdrop-blur-2xl shadow-lg border-b-zinc-950/30 border-r-zinc-950/30 border-t-zinc-600/30 hover:shadow-indigo-500/10 transition-all delay-0 ease-linear border-l-zinc-600/30 cursor-pointer border rounded w-fit gap-2">
         <div class="flex gap-2">
@@ -9,14 +9,14 @@ const {name, resourceImage, rating, Sipnosis, id} = Astro.props;
             <div class="flex flex-col">
                 <span class="text-white font-bold text-xl">{name}</span>
                 <span class="text-nowrap">{rating}</span>
-                <span class="text-zinc-300 w-44 text-sm">{Sipnosis}</span>
+                <span class="text-zinc-300 w-44 text-sm">{Sinopsis}</span>
             </div>
         </div>
         <div class="p-2 text-zinc-500 text-sm flex  w-full bg-white/10 rounded">
             personas que la han visto
         </div>
         <dialog id={"modalPelicula"+id}>
-
+        <!-- Aquí puedes añadir contenido del modal -->
         </dialog>
     </div>
 
@@ -31,6 +31,7 @@ const {name, resourceImage, rating, Sipnosis, id} = Astro.props;
             const idPelicula = id.split("")
             return window.location.href = '/peliculas/'+idPelicula[1];
 
-        } catch (error){ alert("Ha ocurrido un error. Por favor, inténtelo más tarde. ("+ error + ")"); }
+        } catch (error){ 
+            alert("Ha ocurrido un error. Por favor, inténtelo más tarde. ("+ error + ")"); }
         }
     </script>

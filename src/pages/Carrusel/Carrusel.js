@@ -50,7 +50,7 @@ const autoSlide = () => {
 };
 
 // Configurar el intervalo para cambiar la imagen automáticamente cada 3 segundos
-let slideInterval = setInterval(autoSlide, 3000);
+let slideInterval = setInterval(autoSlide, 5000);
 
 // Función para reiniciar el intervalo automático
 const resetAutoSlide = () => {
