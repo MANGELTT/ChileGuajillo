@@ -1,6 +1,10 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+<<<<<<< HEAD
+import CommentsSection from "../../../components/CommentsSection.jsx";
+=======
 import '@fortawesome/fontawesome-free/css/all.min.css';
+>>>>>>> 81e5cc02fa2732417b7dfeeaa62510d478d60fd6
 
 // Obtener el id de los parámetros de la URL
 const { id } = Astro.params;
@@ -22,9 +26,30 @@ const fetchMovieDetails = async (id) => {
     }
     return movieDetails;
 };
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+// Función para obtener los comentarios de la película
+const fetchMovieComments = async (id) => {
+    let comments = [];
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/movie/${id}/reviews`);
+        if (!response.ok) {
+            console.log("Hubo un error al obtener los comentarios", response.status);
+        } else {
+            const result = await response.json();
+            comments = result.data;
+        }
+    } catch (error) {
+        console.error('Error en la solicitud fetch:', error);
+    }
+    return comments;
+};
 
-// Llamada a la función para obtener los detalles de la película
+
+// Llamada a la función para obtener los detalles de la película Y los comentarios
 const movieDetails = await fetchMovieDetails(id);
+const movieComments = await fetchMovieComments(id);
 console.log('Detalles de la película:', movieDetails);
 ---
 
@@ -36,7 +61,7 @@ console.log('Detalles de la película:', movieDetails);
           <div class="flex items-start">
             <img src={movieDetails.image} alt={`Imagen de ${movieDetails.name}`} class="w-60 h-auto rounded mr-4" />
             <div>
-              <p class="text-lg text-gray-300 mb-4">{movieDetails.synopsis}</p>
+              <p class="text-lg text-gray-300 mb-4">{movieDetails.synopsis} </p>
               <p class="text-sm text-gray-500 mb-4">{new Date(movieDetails.releaseDate).toLocaleDateString()}</p>
               <a id="trailer-link" href={movieDetails.urlTrailer} class="bg-zinc-200 font-medium p-2 flex gap-2 items-center" target="_blank" rel="noopener noreferrer">
                 <span>Ver trailer</span>
@@ -50,10 +75,14 @@ console.log('Detalles de la película:', movieDetails);
         </div>
       ) : (
         <div class="max-w-3xl w-full mx-4 p-6 bg-red-900 rounded-lg shadow-lg">
-          <p class="text-white">Error el alfredo le esta dando mantenimiento.</p>
+          <p class="text-white">Error el Alfredo le esta dando mantenimiento.</p>
+          <img src="./src/img/alfredo_mantenimiento.png" alt="Imagen de Alfredo dando mantenimiento">
         </div>
       )}
       <div class="max-w-lg w-full mx-4 p-6 bg-gray-800 rounded-lg shadow-lg mt-6">
+<<<<<<< HEAD
+        <CommentsSection movieId={id} initialComments={movieComments} client:load />
+=======
 
         <!-- STARS -->
         <div id="half-stars-example">
@@ -88,6 +117,7 @@ console.log('Detalles de la película:', movieDetails);
         <h2 class="text-2xl font-bold text-white mb-4">Comentarios</h2>
         <textarea class="w-full h-32 p-2 rounded bg-gray-700 text-white" placeholder="Escribe un comentario..."></textarea>
         <button class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Enviar</button>
+>>>>>>> 81e5cc02fa2732417b7dfeeaa62510d478d60fd6
       </div>
     </div>
 </Layout>
