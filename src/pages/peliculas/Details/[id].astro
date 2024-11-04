@@ -1,10 +1,10 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-<<<<<<< HEAD
+
 import CommentsSection from "../../../components/CommentsSection.jsx";
-=======
+
 import '@fortawesome/fontawesome-free/css/all.min.css';
->>>>>>> 81e5cc02fa2732417b7dfeeaa62510d478d60fd6
+
 
 // Obtener el id de los parámetros de la URL
 const { id } = Astro.params;
@@ -80,9 +80,8 @@ console.log('Detalles de la película:', movieDetails);
         </div>
       )}
       <div class="max-w-lg w-full mx-4 p-6 bg-gray-800 rounded-lg shadow-lg mt-6">
-<<<<<<< HEAD
+
         <CommentsSection movieId={id} initialComments={movieComments} client:load />
-=======
 
         <!-- STARS -->
         <div id="half-stars-example">
@@ -117,7 +116,6 @@ console.log('Detalles de la película:', movieDetails);
         <h2 class="text-2xl font-bold text-white mb-4">Comentarios</h2>
         <textarea class="w-full h-32 p-2 rounded bg-gray-700 text-white" placeholder="Escribe un comentario..."></textarea>
         <button class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Enviar</button>
->>>>>>> 81e5cc02fa2732417b7dfeeaa62510d478d60fd6
       </div>
     </div>
 </Layout>
