@@ -5,19 +5,40 @@ const CommentsSection = ({ movieId }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [profileId, setProfileId] = useState(null);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedProfileId = localStorage.getItem('profileID');
       if (storedProfileId) {
         setProfileId(storedProfileId);
+        checkIfReviewed(storedProfileId);
       } else {
         alert('Hubo un problema al cargar el perfil. Intente de nuevo.');
       }
     }
   }, []);
 
+  const checkIfReviewed = async (profileId) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/reviews?movie_id=${movieId}&profile_id=${profileId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0) {
+          setHasReviewed(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error al verificar la reseña:', error);
+    }
+  };
+
   const submitComment = async () => {
+    if (hasReviewed) {
+      alert('Ya has dejado una reseña para esta película.');
+      return;
+    }
+
     const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
 
     if (!token) {
@@ -51,8 +72,12 @@ const CommentsSection = ({ movieId }) => {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`Error en la respuesta del servidor: ${response.status} - ${errorText}`);
-        alert('Hubo un error en el servidor');
+        if (response.status === 409) {
+          alert('Ya haz reseñado esta película.');
+        } else {
+          console.error(`Error en la respuesta del servidor: ${response.status} - ${errorText}`);
+          alert('Hubo un error en el servidor');
+        }
         return;
       }
 
@@ -60,6 +85,7 @@ const CommentsSection = ({ movieId }) => {
       alert('Comentario enviado correctamente');
       setComment('');
       setRating(0);
+      setHasReviewed(true);
     } catch (error) {
       console.error('Error al enviar el comentario:', error);
       alert('Hubo un error al enviar el comentario');
@@ -92,12 +118,14 @@ const CommentsSection = ({ movieId }) => {
         placeholder="Escribe un comentario..."
         value={comment}
         onChange={(e) => setComment(e.target.value)}
+        disabled={hasReviewed}
       ></textarea>
       <button
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={submitComment}
+        disabled={hasReviewed}
       >
-        Enviar
+        {hasReviewed ? 'Ya has dejado una reseña' : 'Enviar'}
       </button>
     </section>
   );
