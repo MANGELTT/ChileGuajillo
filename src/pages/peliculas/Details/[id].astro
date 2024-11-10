@@ -73,24 +73,7 @@ const averageRating = calculateAverageRating(movieComments);
         )}
       </div>
       <UserProvider>
-        <CommentsSection movieId={id} client:load />
+        <CommentsSection movieId={id} initialComments={movieComments} client:load />
       </UserProvider>
-      <!-- Sección de comentarios anteriores -->
-      <div class="max-w-3xl w-full mx-auto space-y-6">
-        <h2 class="text-3xl font-bold text-white mb-6">Comentarios Anteriores</h2>  
-        <div class="max-h-64 overflow-y-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-          {movieComments && movieComments.length > 0 ? (
-            movieComments.map((comment) => (
-              <div key={comment.review_id} class="mb-6">
-                <p class="text-white"> {comment.user_name || 'Anónimo'}</p>
-                <p class="text-yellow-400"><strong>Calificación:</strong> {comment.rating}/5</p>
-                <p class="text-gray-300"> {comment.comment}</p>
-              </div>
-            ))
-          ) : (
-            <p class="text-gray-400">Aún no hay comentarios para esta película.</p>
-          )}
-        </div>
-      </div>
     </div>
 </Layout>

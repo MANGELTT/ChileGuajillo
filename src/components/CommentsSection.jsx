@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const CommentsSection = ({ movieId }) => {
+const CommentsSection = ({ movieId, initialComments }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [profileId, setProfileId] = useState(null);
   const [hasReviewed, setHasReviewed] = useState(false);
+  const [comments, setComments] = useState(initialComments);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -86,6 +87,7 @@ const CommentsSection = ({ movieId }) => {
       setComment('');
       setRating(0);
       setHasReviewed(true);
+      setComments([...comments, data.data]); // Actualiza el estado de los comentarios
     } catch (error) {
       console.error('Error al enviar el comentario:', error);
       alert('Hubo un error al enviar el comentario');
@@ -127,6 +129,23 @@ const CommentsSection = ({ movieId }) => {
       >
         {hasReviewed ? 'Ya has dejado una reseña' : 'Enviar'}
       </button>
+      <h4 className="text-lg font-bold text-white mt-8 mb-4">Comentarios anteriores:</h4>
+      <div className="max-h-64 overflow-y-auto bg-gray-800 p-4 rounded-lg shadow-lg">
+        {comments.length > 0 ? (
+          comments.map((review) => (
+            <div key={review.review_id} className="mb-4 p-4 bg-gray-900 rounded-lg shadow-md">
+              <div className="flex items-center mb-2">
+                <i className="fas fa-user-circle text-white text-2xl mr-2"></i>
+                <p className="text-white font-bold">{review.user_name || 'Anónimo'}</p>
+              </div>
+              <p className="text-yellow-400"><strong>Calificación:</strong> {review.rating}/5</p>
+              <p className="text-gray-300">{review.comment}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-white">No hay comentarios anteriores.</p>
+        )}
+      </div>
     </section>
   );
 };
