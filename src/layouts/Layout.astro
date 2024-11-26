@@ -57,9 +57,9 @@ const { title } = Astro.props;
                                 <a href="/peliculas" class="pl-8 py-1 pr-16">Películas</a>
 
                                 <!-- Opciones especiales para usuarios autenticados con permisos específicos -->
-                                <a href="/directores/CreateDirector" class="font-medium p-2 text-zinc-300 hover:text-white hidde">Crear Director</a>
-                                <a href="/clasificacion/clasificaciones" class="font-medium p-2 text-zinc-300 hover:text-white hidde">Crear Clasificación</a>
-                                <a href="/peliculas/CreateMovie" class="font-medium p-2 text-zinc-300 hover:text-white hidde">Crear Película</a>
+                                <a href="/directores/CreateDirector" class="font-medium p-2 text-zinc-300 hover:text-white hidden admin-link">Crear Director</a>
+                                <a href="/clasificacion/clasificaciones" class="font-medium p-2 text-zinc-300 hover:text-white hidden admin-link">Crear Clasificación</a>
+                                <a href="/peliculas/CreateMovie" class="font-medium p-2 text-zinc-300 hover:text-white hidden admin-link">Crear Película</a>
                             </div>
                         </div>
                         <div class="px-8">
@@ -107,18 +107,11 @@ const { title } = Astro.props;
 
 <script>
 async function loadUser() {
-    const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
-
-    // Si no hay token, asegurarse de mostrar el menú de invitados y detener la ejecución
-    if (!token) {
-        document.getElementById('navGuest').classList.remove('hidde');
-        document.getElementById('navAuth').classList.add('hidde');
-        return;
-    }
-
     try {
+        const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
         console.log("Token:", token);
         console.log('Fetching userID...');
+        
         const response = await fetch('http://127.0.0.1:8000/api/user-profile', {
             method: 'GET',
             headers: {
@@ -134,17 +127,22 @@ async function loadUser() {
         const userProfile = await response.json();
         const userID = userProfile.userData.profile.user_id;
         const profileID = userProfile.userData.profile.id;
+        const typeProfile = userProfile.userData.profile.typeProfile; // Obtener el typeProfile
+        
         console.log('User ID:', userID);
         console.log('Profile ID:', profileID);
+        console.log('Type Profile:', typeProfile);
+        
         localStorage.setItem('userID', userID);
-        localStorage.setItem('profileID', profileID); // Almacena el userID en localStorage
+        localStorage.setItem('profileID', profileID);
+        localStorage.setItem('typeProfile', typeProfile);
 
         // Ocultar el menú de invitados y mostrar el menú autenticado
         document.getElementById('navGuest').classList.add('hidde');
         document.getElementById('navAuth').classList.remove('hidde');
 
         // Mostrar opciones según el tipo de usuario
-        if (userID === '2') { // Ajusta esta condición según tu lógica de roles
+        if (typeProfile === 2) { // Verificar si es administrador
             document.querySelector('a[href="/directores/CreateDirector"]').classList.remove('hidde');
             document.querySelector('a[href="/clasificacion/clasificaciones"]').classList.remove('hidde');
             document.querySelector('a[href="/peliculas/CreateMovie"]').classList.remove('hidde');
@@ -152,9 +150,34 @@ async function loadUser() {
 
     } catch (error) {
         console.error(error);
-        alert('Hubo un problema al obtener el UserID. Por favor, intenta de nuevo más tarde.');
+        alert('Hubo un problema al obtener el perfil de usuario. Por favor, intenta de nuevo más tarde.');
     }
 }
 
 document.addEventListener('DOMContentLoaded', loadUser);
+
+function checkAdminAccess() {
+    const typeProfile = localStorage.getItem('typeProfile');
+    const adminLinks = document.querySelectorAll('.admin-link');
+    
+    console.log('Type Profile:', typeProfile); // Debug
+    
+    if (typeProfile === '2') { // Note: localStorage stores strings
+      adminLinks.forEach(link => {
+        link.classList.remove('hidden');
+      });
+    }
+  }
+
+  // Run on page load
+  document.addEventListener('DOMContentLoaded', checkAdminAccess);
+
+  // Also check when localStorage changes
+  window.addEventListener('storage', checkAdminAccess);
 </script>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
