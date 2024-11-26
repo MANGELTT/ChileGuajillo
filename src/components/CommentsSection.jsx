@@ -7,15 +7,30 @@ const CommentsSection = ({ movieId, initialComments }) => {
   const [profileId, setProfileId] = useState(null);
   const [hasReviewed, setHasReviewed] = useState(false);
   const [comments, setComments] = useState(initialComments);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedProfileId = localStorage.getItem('profileID');
-      if (storedProfileId) {
+      const token = JSON.parse(localStorage.getItem('tokerUser_Verified'));
+      
+      if (storedProfileId && token) {
         setProfileId(storedProfileId);
         checkIfReviewed(storedProfileId);
-      } else {
-        alert('Hubo un problema al cargar el perfil. Intente de nuevo.');
+        
+        // Obtener el nombre del usuario
+        fetch('http://127.0.0.1:8000/api/user-profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          setUserName(data.userData.name || 'Anónimo');
+        })
+        .catch(error => {
+          console.error('Error al obtener el nombre del usuario:', error);
+        });
       }
     }
   }, []);
@@ -68,6 +83,7 @@ const CommentsSection = ({ movieId, initialComments }) => {
           profile_id: profileId,
           rating,
           comment,
+          user_name: userName // Agregar el nombre del usuario
         }),
       });
 
@@ -136,7 +152,7 @@ const CommentsSection = ({ movieId, initialComments }) => {
             <div key={review.review_id} className="mb-4 p-4 bg-gray-900 rounded-lg shadow-md">
               <div className="flex items-center mb-2">
                 <i className="fas fa-user-circle text-white text-2xl mr-2"></i>
-                <p className="text-white font-bold">{review.user_name || 'Anónimo'}</p>
+                <p className="text-white font-bold">{review.user_name || userName || 'Anónimo'}</p>
               </div>
               <p className="text-yellow-400"><strong>Calificación:</strong> {review.rating}/5</p>
               <p className="text-gray-300">{review.comment}</p>
