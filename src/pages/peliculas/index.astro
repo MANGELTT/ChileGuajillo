@@ -28,7 +28,7 @@ let peliculas = await fetchMovies(); // Se cargan todas las películas por defec
 ---
 
 <Layout title="Películas">
-    <main class="w-full flex flex-col gap-7 overflow-auto-y pl-7 pr-14 py-2">
+    <main class="w-full flex flex-col gap-7 pl-7 pr-14 py-2">
        <div class="w-full flex justify-between">
             <!-- Campo de búsqueda -->
             <input
@@ -44,30 +44,32 @@ let peliculas = await fetchMovies(); // Se cargan todas las películas por defec
             </select>
        </div>
 
-       <!-- Lista de películas -->
-       <div id="movieList" class="flex flex-wrap gap-4">
-           {peliculas.length > 0 ? (
-                peliculas.map((pelicula) => (
-                <a href={`peliculas/Details/${pelicula.id}`} class="relative bg-zinc-800 text-white rounded-lg w-60">
-                    <div class="p-2 absolute bg-gradient-to-b from-black/60 w-full">
-                        <h3 class="text-lg font-medium">{pelicula.name}</h3>
-                        <p class="text-sm text-zinc-500">{pelicula.releaseDate}</p>
-                    </div>
-                    <div>
-                        <img src={pelicula.image} alt="Imagen de la película" class="w-30" />
-                    </div>
-                </a>
-                ))
-           ) : (
-                <p class="text-white">No se encontraron películas</p>
-           )}
+       <!-- Área de desplazamiento exclusivo para películas -->
+       <div class="flex-1 overflow-y-auto" id="movieScrollArea" style="max-height: calc(100vh - 120px);">
+           <div id="movieList" class="flex flex-wrap gap-4">
+               {peliculas.length > 0 ? (
+                    peliculas.map((pelicula) => (
+                    <a href={`peliculas/Details/${pelicula.id}`} class="relative bg-zinc-800 text-white rounded-lg w-60">
+                        <div class="p-2 absolute bg-gradient-to-b from-black/60 w-full">
+                            <h3 class="text-lg font-medium">{pelicula.name}</h3>
+                            <p class="text-sm text-zinc-500">{pelicula.releaseDate}</p>
+                        </div>
+                        <div>
+                            <img src={pelicula.image} alt="Imagen de la película" class="w-full rounded-t-lg" />
+                        </div>
+                    </a>
+                    ))
+               ) : (
+                    <p class="text-white">No se encontraron películas</p>
+               )}
+           </div>
        </div>
     </main>
 
     <!-- Script para manejar la búsqueda -->
     <script>
         const searchInput = document.getElementById('searchInput');
-        
+
         // Función para actualizar la lista de películas
         const updateMoviesList = async (query = '') => {
             console.log("Realizando búsqueda con query:", query);
@@ -94,7 +96,7 @@ let peliculas = await fetchMovies(); // Se cargan todas las películas por defec
                             <p class="text-sm text-zinc-500">${pelicula.releaseDate}</p>
                         </div>
                         <div>
-                            <img src="${pelicula.image}" alt="Imagen de ${pelicula.name}" class="w-30" />
+                            <img src="${pelicula.image}" alt="Imagen de ${pelicula.name}" class="w-full rounded-t-lg" />
                         </div>
                     </a>
                 `).join('');

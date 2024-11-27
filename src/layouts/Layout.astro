@@ -48,22 +48,52 @@ const { title } = Astro.props;
                 </button>
             </header>
             <div class="flex h-full w-full xs:pt-20 md:pt-24 gap-4">
-                <aside class="flex flex-col h-full justify-between pb-2">
+                <aside class="flex flex-col h-full justify-between pb-2 bg-gray-800 shadow-lg">
                     <div class="flex md:flex-col justify-between h-screen text-zinc-300">
-                        <div class="flex flex-col gap-2">
+                        <div class="flex flex-col gap-4">
                             <span class="pl-8 text-sm text-zinc-500 pr-16">Menú de navegación</span>
-                            <div class="flex flex-col gap-2 font-medium">
-                                <a href="/" class="pl-8 py-1 border-l-4 text-red-500 border-l-red-500 pr-16 bg-red-950/20">Inicio</a>
-                                <a href="/peliculas" class="pl-8 py-1 pr-16">Películas</a>
+                            <nav class="flex flex-col gap-2 font-medium">
+                                <a href="/" class="flex items-center pl-8 py-2 border-l-4 border-l-red-500 text-red-500 bg-red-950/20 hover:bg-red-950/30 transition">
+                                    <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0L12 3" />
+                                    </svg>
+                                    Inicio
+                                </a>
+                                <a href="/peliculas" class="flex items-center pl-8 py-2 pr-16 hover:bg-gray-700 transition rounded">
+                                    <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6h6v13m2 0a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                    Películas
+                                </a>
 
                                 <!-- Opciones especiales para usuarios autenticados con permisos específicos -->
-                                <a href="/directores/CreateDirector" class="font-medium p-2 text-zinc-300 hover:text-white hidden admin-link">Crear Director</a>
-                                <a href="/clasificacion/clasificaciones" class="font-medium p-2 text-zinc-300 hover:text-white hidden admin-link">Crear Clasificación</a>
-                                <a href="/peliculas/CreateMovie" class="font-medium p-2 text-zinc-300 hover:text-white hidden admin-link">Crear Película</a>
-                            </div>
+                                <a href="/directores/CreateDirector" class="flex items-center p-2 text-zinc-300 hover:text-white hover:bg-gray-700 transition hidden admin-link rounded">
+                                    <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    Crear Director
+                                </a>
+                                <a href="/clasificacion/clasificaciones" class="flex items-center p-2 text-zinc-300 hover:text-white hover:bg-gray-700 transition hidden admin-link rounded">
+                                    <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Crear Clasificación
+                                </a>
+                                <a href="/peliculas/CreateMovie" class="flex items-center p-2 text-zinc-300 hover:text-white hover:bg-gray-700 transition hidden admin-link rounded">
+                                    <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    Crear Película
+                                </a>
+                            </nav>
                         </div>
                         <div class="px-8">
-                            <button id="btnLogOut" class="hidde">Cerrar Sesión</button>
+                            <button id="btnLogOut" class="flex items-center py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                                <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7" />
+                                </svg>
+                                Cerrar Sesión
+                            </button>
                         </div>
                     </div>
                 </aside>
